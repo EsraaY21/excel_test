@@ -10,6 +10,16 @@
     <nav class="navbar navbar-expand-lg navbar-light bg-light">
         <div class="container">
             <a class="navbar-brand" href="{{ route('todos.index') }}">Todo App</a>
+            <div class="collapse navbar-collapse">
+                <ul class="navbar-nav ms-auto">
+                    <li class="nav-item">
+                        <a class="nav-link" href="{{ route('todos.index') }}">Todos</a>
+                    </li>
+                    <li class="nav-item">
+                        <a class="nav-link" href="{{ route('todos.importForm') }}">Import Todos</a>
+                    </li>
+                </ul>
+            </div>
         </div>
     </nav>
     <div class="container mt-4">

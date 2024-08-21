@@ -3,10 +3,49 @@
 namespace App\Http\Controllers;
 
 use App\Models\Todo;
+use App\Imports\TodosImport;
 use Illuminate\Http\Request;
+use Maatwebsite\Excel\Facades\Excel;
+use Maatwebsite\Excel\Validators\ValidationException; // Import the correct ValidationException
 
 class TodoController extends Controller
 {
+    // this is just the form
+    public function importForm()
+    {
+        return view('todos.importForm');
+    }
+
+
+    // store imported excel data
+    public function importStore(Request $request)
+    {
+        // Validate the uploaded file
+        $formFields = $request->validate([
+            'file' => 'required|mimes:xlsx,xls:|max:50',
+        ]);
+
+        if (empty($request->file)) {
+            return back();
+        }
+
+        // Get the uploaded file
+        $file = $request->file('file');
+
+        try {
+            Excel::import(new TodosImport(), $file);
+            return redirect()->route('todos.index');
+        } catch (ValidationException $e) {
+            $failures = $e->failures();
+            dd($e);
+            return redirect()->back()->with('error', 'يوجد خطا في معلومات الملف');
+        } catch (\Exception $e) {
+            dd($e);
+
+            return redirect()->back()->with('error', 'يوجد خطا في معلومات الملف');
+        }
+    }
+
     public function index()
     {
         $todos = Todo::all();
